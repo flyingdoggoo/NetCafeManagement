@@ -1,5 +1,7 @@
 # NetCafeManagement
 # Giao diện login
+- Trang chủ
+![490987643_1414181413282902_5328450994142624835_n](https://github.com/user-attachments/assets/933bbf2c-487f-424a-9323-8bfdc11e66e2)
 - Đăng nhập
 ![490239077_691039116708885_7264641358270847644_n](https://github.com/user-attachments/assets/95b9eefc-0186-49a3-bc92-ec9d6b3b1c73)
 - Đăng ký
