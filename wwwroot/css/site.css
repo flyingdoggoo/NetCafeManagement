@@ -1,0 +1,111 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+.navbar.navbar-expand-sm.navbar-toggleable-sm {
+    /* Bỏ màu nền trắng mặc định của Bootstrap */
+    background-color: transparent !important; /* !important để ghi đè bootstrap */
+    /* Thiết lập nền gradient tuyến tính (linear-gradient) */
+    /* Ví dụ: từ màu tím đậm sang màu đen */
+    /*    background-image: linear-gradient(to right, #4a00e0, #1e1e1e);*/
+    background-image: linear-gradient(to right, #6a11cb, #1f6ac8, #6a11cb);
+    /*    background-image: linear-gradient(to right, #6a11cb, #2575fc, #6a11cb);*/
+    /* === Tùy chỉnh MÀU CHỮ và MÀU LINK === */
+    /* Vì nền tối, chữ cần phải sáng màu */
+    /* Đổi màu cho các link chính trong navbar */
+    .navbar-nav .nav-link.text-dark, /* Các link đang có class text-dark */
+    .navbar-text.text-dark
+
+{ /* Chữ 'Chào, username!' đang có class text-dark */
+    color: rgba(255, 255, 255, 0.85) !important; /* Màu trắng hơi mờ */
+}
+
+/* Đổi màu khi hover link */
+.navbar-nav .nav-link.text-dark:hover,
+.navbar-nav .nav-link.text-dark:focus {
+    color: #ffffff !important; /* Màu trắng sáng khi hover/focus */
+}
+
+/* Đổi màu chữ cho Brand (tên trang web) */
+.navbar-brand {
+    color: #ffffff !important; /* Màu trắng sáng */
+}
+
+    .navbar-brand:hover,
+    .navbar-brand:focus {
+        color: #e0e0e0 !important; /* Màu trắng xám nhẹ khi hover */
+    }
+
+/* Đổi màu cho nút bật/tắt menu trên di động (toggler) */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3); /* Viền mờ */
+}
+
+.navbar-toggler-icon {
+    /* Icon mặc định là ảnh SVG, có thể cần custom background-image để đổi màu */
+    /* Cách đơn giản là dùng bộ lọc CSS (có thể không hoàn hảo) */
+    filter: brightness(0) invert(1); /* Chuyển icon thành màu trắng */
+}
+
+/* Xóa đường viền dưới và đổ bóng mặc định (nếu muốn) */
+border-bottom: none !important;
+box-shadow: none !important;
+
+/* === TUY CHỌN MÀU SẮC KHÁC === */
+/* Gradient Tím sang Xanh Đậm */
+/* background-image: linear-gradient(to right, #6a11cb, #2575fc); */
+
+/* Gradient Đen sang Xám Đậm */
+/* background-image: linear-gradient(to right, #1c1c1c, #434343); */
+
+/* Gradient Tím Nhạt sang Hồng */
+/* background-image: linear-gradient(to right, #8e2de2, #4a00e0); */
+
+/*}*/
+
+/* (Tùy chọn) Đảm bảo menu dropdown cũng có nền tối nếu cần */
+.navbar .dropdown-menu {
+    background-color: #343a40; /* Màu nền tối cho dropdown */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.navbar .dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+    .navbar .dropdown-item:hover,
+    .navbar .dropdown-item:focus {
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+.navbar .dropdown-divider {
+    border-top-color: rgba(255, 255, 255, 0.15);
+}

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<QuanLyNet.Models.Bill>
+@using QuanLyNet.Models;
+
+@{
+    ViewData["Title"] = "Thống kê Doanh thu";
+    decimal totalRevenue = ViewBag.TotalRevenue ?? 0m; 
+    DateTime? startDateFilter = ViewBag.StartDateFilter;
+    DateTime? endDateFilter = ViewBag.EndDateFilter;
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<form asp-action="BillManagement" method="get" class="row g-3 align-items-end mb-4">
+    <div class="col-md-4">
+        <label for="startDate" class="form-label">Từ ngày:</label>
+        <input name="startDate" id="startDate" type="date" class="form-control" value="@(startDateFilter?.ToString("yyyy-MM-dd"))" />
+    </div>
+    <div class="col-md-4">
+        <label for="endDate" class="form-label">Đến ngày:</label>
+        <input name="endDate" id="endDate" type="date" class="form-control" value="@(endDateFilter?.ToString("yyyy-MM-dd"))" />
+    </div>
+    <div class="col-md-auto">
+        <button type="submit" class="btn btn-primary">Lọc</button>
+        <a asp-action="BillManagement" class="btn btn-secondary">Xem tất cả</a>
+    </div>
+</form>
+
+<div class="alert alert-info">
+    <h4>Tổng doanh thu @(startDateFilter.HasValue || endDateFilter.HasValue ? "trong khoảng đã chọn" : "tất cả"):
+        <strong class="text-success">@totalRevenue.ToString("N0") VNĐ</strong>
+    </h4>
+</div>
+
+<table class="table table-striped table-bordered table-hover table-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Khách hàng</th>
+            <th>Máy</th>
+            <th>Bắt đầu</th>
+            <th>Kết thúc</th>
+            <th>Thời gian (phút)</th>
+            <th>Tổng tiền (VNĐ)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any()) 
+        {
+            <tr>
+                <td colspan="7" class="text-center">Không có hóa đơn nào trong khoảng thời gian này.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var bill in Model)
+            {
+                string durationMinutes = "N/A";
+                if (bill.EndTime.HasValue)
+                {
+                    TimeSpan duration = bill.EndTime.Value - bill.StartTime;
+                    durationMinutes = Math.Round(duration.TotalMinutes, 0).ToString();
+                }
+
+                <tr>
+                    <td>@(bill.User?.Username ?? "N/A")</td>
+                    <td>@(bill.Computer?.Name ?? "N/A")</td>
+                    <td>@bill.StartTime.ToString("HH:mm dd/MM/yy")</td>
+                    <td>@(bill.EndTime?.ToString("HH:mm dd/MM/yy") ?? "Đang chạy")</td>
+                    <td>@durationMinutes</td>
+                    <td class="fw-bold">@bill.TotalCost</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

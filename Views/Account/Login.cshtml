@@ -1,0 +1,35 @@
+﻿@model QuanLyNet.Models.User
+<h2>Đăng Nhập</h2>
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form asp-action="Login" method="post">
+                <hr />
+                @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Username" name="username" id="username" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="Username"  for="username">Tên đăng nhập</label>
+					<span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Password"  name="password" id="password" type="password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Password" for="password">Mật khẩu</label>
+					<span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Đăng nhập</button>
+                </div>
+                <div class="mt-3">
+                    <p>
+                        <a asp-action="Register">Đăng ký tài khoản mới</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

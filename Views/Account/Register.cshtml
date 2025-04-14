@@ -1,0 +1,48 @@
+﻿@model QuanLyNet.Models.User
+
+
+<h2>Đăng ký tài khoản</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <section>
+            <form asp-action="Register" method="post">
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Username" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="Username">Tên đăng nhập</label>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" type="password" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="Password">Mật khẩu</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input name="confirmPassword" id="confirmPassword" type="password" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label for="confirmPassword">Xác nhận mật khẩu</label>
+                    <span class="text-danger" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Name" class="form-control" aria-required="true" />
+                    <label asp-for="Name">Họ và tên</label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <label asp-for="PhoneNumber">Số điện thoại</label>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Đăng ký</button>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<QuanLyNet.Models.Bill>
+
+@{
+    ViewData["Title"] = "Lịch sử Giao dịch";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Bạn chưa có giao dịch nào đã hoàn thành.</div>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Máy đã dùng</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th>Thời gian (phút)</th>
+                <th>Chi phí (VNĐ)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bill in Model)
+            {
+                string durationMinutes = "N/A";
+                if (bill.EndTime.HasValue) 
+                {
+                    TimeSpan duration = bill.EndTime.Value - bill.StartTime;
+                    durationMinutes = Math.Round(duration.TotalMinutes, 0).ToString();
+                }
+
+                <tr>
+                    <td>@(bill.Computer?.Name ?? "N/A")</td>
+                    <td>@bill.StartTime.ToString("HH:mm dd/MM/yyyy")</td>
+                    <td>@bill.EndTime.Value.ToString("HH:mm dd/MM/yyyy")</td>
+                    <td>@durationMinutes</td>
+                    <td class="fw-bold">@bill.TotalCost</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

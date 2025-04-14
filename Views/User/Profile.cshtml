@@ -1,0 +1,129 @@
+﻿@model QuanLyNet.Models.User // Thay đổi model thành User
+@using Microsoft.AspNetCore.Http
+@using QuanLyNet.Controllers.Account
+@inject IHttpContextAccessor Accessor
+
+@{
+    ViewData["Title"] = "Hồ sơ";
+    // Lấy các thông tin session nếu cần cho các phần khác (vd: kiểm tra quyền lần nữa)
+    var sessionUsername = Accessor.HttpContext?.Session.GetString(AccountController.SessionKeyUsername);
+    var sessionIsAdmin = Accessor.HttpContext?.Session.GetString(AccountController.SessionKeyIsAdmin) == "True";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <h1>Hồ sơ của @Model.Name</h1>
+
+            <hr />
+
+            <!-- Phần hiển thị thông tin -->
+            <div id="displayInfo">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Thông tin chi tiết</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">Tên đăng nhập:</dt>
+                            <dd class="col-sm-8">@Model.Username</dd>
+
+                            <dt class="col-sm-4">Họ và tên:</dt>
+                            <dd class="col-sm-8">@Model.Name</dd>
+
+                            <dt class="col-sm-4">Số điện thoại:</dt>
+                            <dd class="col-sm-8">@(Model.PhoneNumber ?? "Chưa cập nhật")</dd> <!-- Hiển thị nếu có, hoặc báo chưa cập nhật -->
+
+                            <dt class="col-sm-4">Số dư tài khoản:</dt>
+                            <dd class="col-sm-8 fw-bold text-success">@Model.Balance.ToString("N0") đ</dd> <!-- Định dạng số dư -->
+
+                            <dt class="col-sm-4">Loại tài khoản:</dt>
+                            <dd class="col-sm-8">@(Model.isAdmin ? "Quản trị viên" : "Người dùng")</dd>
+                        </dl>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button id="editButton" class="btn btn-primary">Chỉnh sửa thông tin</button>
+                    </div>
+                </div>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div id="editForm" style="display: none;">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Chỉnh sửa thông tin</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="UpdateProfile" method="post">
+                            @Html.AntiForgeryToken() 
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div> 
+
+                            <input type="hidden" asp-for="Id" />
+
+                            <div class="mb-3">
+                                <label asp-for="Username" class="form-label fw-bold">Tên đăng nhập:</label>
+                                <input asp-for="Username" class="form-control" readonly /> 
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label fw-bold">Họ và tên:</label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span> 
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="PhoneNumber" class="form-label fw-bold">Số điện thoại:</label>
+                                <input asp-for="PhoneNumber" class="form-control" placeholder="Nhập số điện thoại (tùy chọn)" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Balance" class="form-label fw-bold">Số dư:</label>
+                                <input asp-for="Balance" class="form-control" readonly /> 
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" id="cancelButton" class="btn btn-secondary">Hủy</button>
+                                <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    } 
+    <script>
+        $(document).ready(function () {
+            const displayInfoDiv = $('#displayInfo');
+            const editFormDiv = $('#editForm');
+            const editButton = $('#editButton');
+            const cancelButton = $('#cancelButton');
+
+            editButton.on('click', function () {
+                displayInfoDiv.hide();
+                editFormDiv.show();   
+            });
+
+            cancelButton.on('click', function () {
+                editFormDiv.hide();  
+                displayInfoDiv.show();
+                 $('.text-danger').text(''); 
+                 $('.is-invalid').removeClass('is-invalid'); 
+            });
+
+             if ($('#editForm .text-danger:not(:empty)').length > 0 || $('#editForm .input-validation-error').length > 0) {
+                 displayInfoDiv.hide();
+                 editFormDiv.show();
+             }
+
+        });
+    </script>
+}

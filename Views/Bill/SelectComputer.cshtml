@@ -1,0 +1,212 @@
+﻿@model IEnumerable<QuanLyNet.Models.Computer>
+@using QuanLyNet.Models
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Chọn máy";
+    var currentSession = ViewBag.CurrentSession as QuanLyNet.Models.Bill;
+}
+
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+@* Đây là thằng khi đang có phiên chạy  *@
+@if (currentSession != null && currentSession.Computer != null && currentSession.User != null)
+{
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Đang sử dụng máy: @currentSession.Computer.Name</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Bắt đầu lúc:</strong> @currentSession.StartTime.ToString("HH:mm:ss dd/MM/yyyy")</p>
+                    <p><strong>Đơn giá:</strong> @currentSession.Computer.Price.ToString("N0") đ/giờ</p>
+                    <hr>
+                    <p><strong>Thời gian đã sử dụng:</strong> <span id="elapsedTime" class="fw-bold">--:--:--</span></p>
+                    <p><strong>Số dư còn lại:</strong> <span id="remainingBalance" class="fw-bold text-success">-.--- đ</span></p>
+                    <p><strong>Thời gian còn lại (ước tính):</strong> <span id="remainingTime" class="fw-bold text-danger">--:--:--</span></p>
+                </div>
+                <div class="card-footer text-center">
+                    <form asp-action="StopUsing" asp-controller="Bill" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">Kết thúc phiên sử dụng</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="sessionData"
+                 data-start-time="@currentSession.StartTime.ToString("o")" 
+                 data-initial-balance="@currentSession.User.Balance"
+                 data-price-per-hour="@currentSession.Computer.Price">
+            </div>
+        </div>
+    </div>
+}
+@* Đây là phần giao diện khi đang chọn máy  *@
+else 
+{
+    if (!Model.Any())
+    {
+        <div class="alert alert-warning">Không có máy nào để hiển thị.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var computer in Model)
+            {
+                string statusClass = "text-secondary";
+                string statusText = computer.Status.ToString();
+                string buttonTitle = "";
+
+                switch (computer.Status)
+                {
+                    case ComputerStatus.Available:
+                        statusClass = "text-success fw-bold";
+                        statusText = "Sẵn sàng";
+                        break;
+                    case ComputerStatus.InUse:
+                        statusClass = "text-danger";
+                        statusText = "Đang sử dụng";
+                        buttonTitle = "Máy đang được sử dụng";
+                        break;
+                    case ComputerStatus.UnderMaintenance:
+                        statusClass = "text-warning";
+                        statusText = "Đang bảo trì";
+                        buttonTitle = "Máy đang bảo trì";
+                        break;
+                }
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 shadow-sm @(computer.Status != ComputerStatus.Available ? "bg-light" : "")">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@computer.Name</h5>
+                            <p class="card-text">Trạng thái: <span class="@statusClass">@statusText</span></p>
+                            <p class="card-text mb-3">Đơn giá: @computer.Price.ToString("N0") VNĐ/giờ</p>
+
+                            <div class="mt-auto">
+                                @if (computer.Status == ComputerStatus.Available) 
+                                {
+                                    <form asp-action="StartUsing" asp-controller="Bill" asp-route-computerId="@computer.ID" method="post" class="d-grid">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary">Sử dụng máy này</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-secondary w-100" disabled title="@buttonTitle">
+                                        Sử dụng máy này
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+
+@section Scripts {
+    @* Chỉ dùng thằng này khi đang có phiên chạy *@
+    @* Đây là hàm giúp hiển thị theo thời gian thật *@
+    @if (currentSession != null)
+    {
+        <script>
+            function formatTime(totalSeconds) {
+                if (totalSeconds < 0) totalSeconds = 0; 
+
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = Math.floor(totalSeconds % 60);
+
+                const paddedHours = String(hours).padStart(2, '0');
+                const paddedMinutes = String(minutes).padStart(2, '0');
+                const paddedSeconds = String(seconds).padStart(2, '0');
+
+                return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+            }
+
+             function formatCurrency(amount) {
+                 if (isNaN(amount)) return "0";
+                 // Làm tròn đến đơn vị đồng và thêm dấu phẩy
+                return Math.round(amount).toLocaleString('vi-VN');
+            }
+
+
+            $(document).ready(function () {
+                const sessionDataDiv = $('#sessionData');
+                const elapsedTimeSpan = $('#elapsedTime');
+                const remainingBalanceSpan = $('#remainingBalance');
+                const remainingTimeSpan = $('#remainingTime');
+
+                const startTimeString = sessionDataDiv.data('start-time');
+                const initialBalance = parseFloat(sessionDataDiv.data('initial-balance'));
+                const pricePerHour = parseFloat(sessionDataDiv.data('price-per-hour'));
+
+                if (!startTimeString || isNaN(initialBalance) || isNaN(pricePerHour) || pricePerHour <= 0) {
+                    console.error("Dữ liệu session không hợp lệ cho việc tính toán thời gian.");
+                    remainingTimeSpan.text("Lỗi dữ liệu");
+                    elapsedTimeSpan.text("Lỗi dữ liệu");
+                    remainingBalanceSpan.text(formatCurrency(initialBalance) + " đ"); 
+                    return; // Dừng script nếu dữ liệu lỗi
+                }
+
+                const startTime = new Date(startTimeString); 
+                 const pricePerSecond = pricePerHour / 3600;
+
+                let intervalId = null;
+
+                function updateTimers() {
+                    const now = new Date();
+                    const elapsedTotalSeconds = Math.floor((now - startTime) / 1000);
+
+                    const costIncurred = elapsedTotalSeconds * pricePerSecond;
+                    const currentBalance = initialBalance - costIncurred;
+
+                    const remainingTotalSeconds = currentBalance > 0 ? Math.floor(currentBalance / pricePerSecond) : 0;
+
+
+                    elapsedTimeSpan.text(formatTime(elapsedTotalSeconds));
+                    remainingBalanceSpan.text(formatCurrency(currentBalance) + " đ");
+                    remainingTimeSpan.text(formatTime(remainingTotalSeconds));
+
+                    if (currentBalance < pricePerHour / 6) { // Ví dụ: còn dưới 10 phút tiền
+                         remainingTimeSpan.removeClass('text-danger').addClass('text-warning fw-bolder');
+                         remainingBalanceSpan.removeClass('text-success').addClass('text-warning fw-bolder');
+                    }
+                    if (currentBalance <= 0) {
+                        remainingTimeSpan.text("00:00:00").addClass('text-danger fw-bolder').removeClass('text-warning');
+                        remainingBalanceSpan.text("0 đ").addClass('text-danger fw-bolder').removeClass('text-warning');
+
+                        if (intervalId) { 
+                            clearInterval(intervalId);
+                            intervalId = null; 
+                            console.log("Hết tiền. Tự động kết thúc phiên.");
+
+                            $('#stopSessionForm button').text('Đang kết thúc...').prop('disabled', true);
+
+                            if (stopSessionForm.length) { // Kiểm tra form tồn tại
+                                stopSessionForm.submit();
+                            } else {
+                                console.error("Không tìm thấy form 'stopSessionForm' để submit.");
+                            }
+                        }
+                    }
+                }
+
+                if (initialBalance > 0)
+                {
+                    intervalId = setInterval(updateTimers, 1000);
+                } else
+                {
+                     updateTimers();
+                     remainingTimeSpan.text("00:00:00").addClass('text-danger fw-bolder');
+                     remainingBalanceSpan.text("0 đ").addClass('text-danger fw-bolder');
+                     console.log("Số dư ban đầu không đủ.");
+                }
+
+            });
+        </script>
+    }
+}

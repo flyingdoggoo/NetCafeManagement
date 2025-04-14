@@ -1,0 +1,128 @@
+﻿@model IEnumerable<QuanLyNet.Models.User> 
+
+@{
+    ViewData["Title"] = "Quản lý Khách hàng";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+<table class="table table-striped table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Tên đăng nhập</th>
+            <th>Họ và tên</th>
+            <th>Số điện thoại</th>
+            <th>Số dư (VNĐ)</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center">Không có khách hàng nào.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Name</td>
+                    <td>@(user.PhoneNumber ?? "N/A")</td> 
+                    <td class="text-end">@user.Balance.ToString("N0")</td> 
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm me-1"
+                                data-bs-toggle="modal" data-bs-target="#addBalanceModal"
+                                data-userid="@user.Id" data-username="@user.Username">
+                            <i class="fas fa-plus-circle me-1"></i> Nạp tiền
+                        </button>
+
+                        <form asp-action="DeleteUser" asp-controller="Admin" asp-route-userId="@user.Id" method="post" class="d-inline"
+                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài khoản @user.Username không? Hành động này không thể hoàn tác!');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash-alt me-1"></i> Xóa
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="addBalanceModal" tabindex="-1" aria-labelledby="addBalanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="AddBalance" asp-controller="Admin" method="post" id="addBalanceForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBalanceModalLabel">Nạp tiền cho tài khoản</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="userId" id="addBalanceUserId" /> 
+
+                    <div class="mb-3">
+                        <label for="addBalanceUsername" class="form-label">Tài khoản:</label>
+                        <input type="text" id="addBalanceUsername" class="form-control" readonly /> 
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="addBalanceAmount" class="form-label">Số tiền cần nạp (VNĐ):</label>
+                        <input type="number" name="amount" id="addBalanceAmount" class="form-control" placeholder="Ví dụ: 50000"/> 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận nạp</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const addBalanceModal = document.getElementById('addBalanceModal');
+            if (addBalanceModal) {
+                addBalanceModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const userId = button.getAttribute('data-userid');
+                    const username = button.getAttribute('data-username');
+
+                    const modalUserIdInput = addBalanceModal.querySelector('#addBalanceUserId');
+                    const modalUsernameInput = addBalanceModal.querySelector('#addBalanceUsername');
+                    const modalAmountInput = addBalanceModal.querySelector('#addBalanceAmount');
+
+                    modalUserIdInput.value = userId;
+                    modalUsernameInput.value = username;
+                    modalAmountInput.value = ''; 
+                    modalAmountInput.focus();
+                });
+            }
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

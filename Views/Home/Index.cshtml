@@ -1,0 +1,68 @@
+﻿<style>
+    body {
+        background-image: url('/images/background1.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+        background-color: #f0f0f0;
+        min-height: 100vh;
+    }
+    .homepage-content-wrapper {
+        background-color: rgb(255, 255, 255, 0.1);
+        padding: 2rem 1.5rem; 
+        border-radius: 0.75rem; 
+        margin-top: 5vh; 
+        margin-bottom: 5vh;
+        /* box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );  */
+        color: white; 
+    }
+    .homepage-content-wrapper a {
+            color: #d1e7ff;
+            text-decoration: none;
+    }
+
+    .homepage-content-wrapper a:hover {
+                color: #ffffff;
+                text-decoration: underline;
+     }
+
+
+</style>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 text-center homepage-content-wrapper">
+
+            <img src="~/images/Logo_dhbkdn.jpg" alt="Logo Quán Net XYZ" class="mb-4" style="max-height: 100px;" />
+
+            <h1 class="display-5 mb-3 fw-bold" style="color: white">Chào mừng đến với Net HiếuPro!</h1>
+
+            <div class="row justify-content-center mb-4">
+                <div class="col-sm-8">
+                    <p><strong>Khám phá những gì chúng tôi mang lại:</strong></p>
+                    <ul class="list-unstyled text-start fw-bolder">
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Dàn máy cấu hình mạnh mẽ, cân mọi tựa game.</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Đường truyền Internet tốc độ cao, ổn định.</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Không gian sạch sẽ, thoáng mát, ghế ngồi thoải mái.</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Đa dạng đồ ăn, thức uống phục vụ tận nơi.</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Đội ngũ nhân viên thân thiện, hỗ trợ nhiệt tình.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="mb-4">
+                Hãy <a asp-controller="Account" asp-action="Login" class="fw-bold">đăng nhập</a> hoặc
+                <a asp-controller="Account" asp-action="Register" class="fw-bold">đăng ký tài khoản</a>
+                để bắt đầu chọn máy và tận hưởng những giờ phút thư giãn tuyệt vời!
+            </p>
+
+            <div>
+                <a asp-controller="Bill" asp-action="SelectComputer" class="btn btn-primary btn-lg me-2">Chọn máy ngay</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

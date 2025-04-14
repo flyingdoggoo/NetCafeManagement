@@ -1,0 +1,60 @@
+﻿@model IEnumerable<QuanLyNet.Models.Computer>
+
+@{
+    ViewData["Title"] = "Quản lý Máy tính";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<table class="table table-striped table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID Máy</th>
+            <th>Tên Máy</th>
+            <th>Tình trạng</th>
+            <th>Giá máy</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var computer in Model)
+            {
+            string statusClass = "";
+            switch (computer.Status)
+            {
+                case ComputerStatus.Available: statusClass = "text-success fw-bold"; break;
+                case ComputerStatus.InUse: statusClass = "text-danger fw-bold"; break;
+                case ComputerStatus.UnderMaintenance: statusClass = "text-warning fw-bold"; break;
+            }
+                <tr>
+                <td>@computer.ID</td>
+                <td>@computer.Name</td>
+                <td class="@statusClass">@computer.Status</td>
+                <td>@computer.Price.ToString("N0")</td>
+                <td>
+                    <a asp-action="EditComputer" asp-route-id="@computer.ID" class="btn btn-warning btn-sm me-1" title="Sửa">
+                        <i class="fas fa-edit"></i> Sửa
+                    </a>
+                    <form asp-action="DeleteComputer" asp-controller="Admin" asp-route-id="@computer.ID" method="post" class="d-inline"
+                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa máy @computer.Name không?');">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-sm" title="Xóa"
+                        @(computer.Status == ComputerStatus.InUse ? "disabled" : "")>
+                            <i class="fas fa-trash-alt"></i> Xóa
+                        </button>
+                    </form>
+                </td>
+                </tr>
+            }
+    </tbody>
+</table>
+
+
