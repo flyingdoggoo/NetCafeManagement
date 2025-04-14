@@ -1,18 +1,20 @@
 # NetCafeManagement
 # Giao diện login
-![491007258_1365456251408509_1515604339425962279_n](https://github.com/user-attachments/assets/6a82978c-61bc-402b-b25f-5f10cc1586ef)
+- Đăng nhập
+![490239077_691039116708885_7264641358270847644_n](https://github.com/user-attachments/assets/95b9eefc-0186-49a3-bc92-ec9d6b3b1c73)
+- Đăng ký
+![490986450_663018486462913_6626915677973080705_n](https://github.com/user-attachments/assets/9faa39a9-427a-4350-8413-2dbff16b9118)
 # Giao diện quản lý
 - Quản lý khách hàng
-![491276133_1302053337524187_4075158986665692888_n](https://github.com/user-attachments/assets/382c0eae-2172-4a55-9c98-4b5c0d765766)
+![491230072_1373077397075530_5334857839827936643_n](https://github.com/user-attachments/assets/fd56e61d-87c2-480c-a60e-cad1ee4b34f6)
 - Quản lý máy tính
-![483161666_981915647473049_4380881111686309710_n](https://github.com/user-attachments/assets/03001ce1-2ce6-4d91-a6fd-ca52cadc22c0)
+![489568220_542620245189723_8586186395491526647_n](https://github.com/user-attachments/assets/ec3e0950-7ae5-4236-88de-880a8199852c)
 - Quản lý doanh thu
-![491026093_1796846250858354_1742072436220823352_n](https://github.com/user-attachments/assets/65e05daf-b0a0-49b4-917f-de3adb5e79f5)
+![490997265_1673798323252196_4846891621164513799_n](https://github.com/user-attachments/assets/84f3f545-4cda-4dc3-b22e-919684689a73)
 # Giao diện người dùng
 - Chọn máy
-![491008164_1038464751469069_60759836755815769_n](https://github.com/user-attachments/assets/21f7a62c-6dc7-4772-8c6b-0fbd56d9a2af)
-![491117471_1066232095343154_1013115773992236068_n](https://github.com/user-attachments/assets/bd56e626-182a-417b-ac2e-6f8b4b24a8f3)
+![490360413_1210097054124929_6076337436162316222_n](https://github.com/user-attachments/assets/494a5c32-585e-4e6e-a18f-db0bce646ff7)
 - Coi thông tin cá nhân
-![491276949_1636392351096478_6790191403223164506_n](https://github.com/user-attachments/assets/54e25840-401b-421a-9b3f-e5d4dc63a49a)
+![483506664_692853950092504_62676388075364885_n](https://github.com/user-attachments/assets/4fa3dbfd-b0f4-44ae-8493-8560ed7b73b3)
 - Coi lịch sử giao dịch
-![491007787_684546330610662_6853442689261586674_n](https://github.com/user-attachments/assets/69a67cfe-ffd3-4efc-bfd4-f0709960cfe5)
+![491021847_2144210292680579_6482966263771617964_n](https://github.com/user-attachments/assets/2a518c7a-b15a-4431-9197-dfc9e775e896)
